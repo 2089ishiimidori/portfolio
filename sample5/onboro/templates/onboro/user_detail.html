@@ -1,0 +1,52 @@
+{% extends 'onboro/base.html' %}
+{% load widget_tweaks %}  
+{% load humanize %}  
+
+{% block title %}  
+{{ object.username }} | {{ block.super }}  
+{% endblock %}  
+
+{% block contents %}  
+
+<div class="my-3">  
+  <a href="{% url 'onboro:user_index' %}">一覧に戻る</a>  
+</div>  
+
+<table class="table">  
+  <tbody>  
+    <tr>  
+      <th>ユーザー名</th>  
+      <td>{{ object.username }}</td>  
+    </tr>  
+    <tr>  
+      <th>有効</th>  
+      <td>{{ object.is_active }}</td>  
+    </tr>  
+  </tbody>  
+</table>  
+
+<div class="my-3">  
+  コイン: {{ object.coin|intcomma }}  
+</div>  
+
+<form action="{% url 'onboro:transaction_charge' object.pk %}" method="post" class="mb-3" id="coin-charge-form">  
+  {% csrf_token %}  
+  {{ charge_form.user }}  
+  <div class="mb-3">  
+    {{ charge_form.amount|add_class:"form-control" }}  
+  </div>  
+  <input type="submit" value="追加" class="btn btn-primary" id="charge-button">  
+</form>  
+
+{% include 'onboro/transaction_records.html' with transaction_records=object.transactionrecord_set.all %}  
+
+<script>  
+    document.getElementById('coin-charge-form').addEventListener('submit', function(event) {  
+        const button = document.getElementById('charge-button');  
+        button.disabled = true; // ボタンを無効化して二重送信を防ぐ  
+        button.value = '処理中...'; // ボタンのテキストを変更  
+        // フォームが送信されるときにさらに何か処理を追加したければここに  
+    });  
+</script>  
+
+{% endblock %}  

@@ -1,0 +1,58 @@
+{% extends 'onboro/base.html' %}
+{% load humanize %}
+
+{% block title %}
+{{ book.taitle }} | {{ block.super }}
+{% endblock %}
+
+{% block contents %}
+
+<h1 class="my-3">{{ book.title }}</h1>
+<img src="{{ book.image.url }}" alt="{{ book.title }}" style="width: 300px; height: auto;">
+<div class="mb-3">
+    カテゴリ:{{ book.category.name }}
+</div>
+<div class="mb-3">
+    価格:{{ book.price|intcomma }}
+</div>
+<div>
+    概要:
+    <div class="ms-3">
+        {{ book.abstract|linebreaks }}
+    </div>
+</div>
+
+<ul class="nav flex-column">
+    {% for chapter in book.chapter_set.all %}
+        <li class="nav-item">
+            {% if can_view_chapter %}
+            <a href="{% url 'onboro:book_chapter' book.pk chapter.number %}" class="nav-link">
+                {{ chapter.title_with_number }}
+            </a>
+            {% else %}
+            <a href="{% url 'onboro:book_chapter' book.pk chapter.number %}" class="nav-link disabled">
+                {{ chapter.title_with_number }}
+            </a>
+            {% endif %}
+        </li>
+    {% endfor %}
+</ul>
+
+{% if user.is_authenticated %}
+    {% if use_form %}
+        <form action="{% url 'onboro:transaction_use' user.pk %}" method="post" class="mt-3">
+            {% csrf_token %}
+            {{ use_form }}
+            <input type="submit" value="購入" class="btn btn-primary">
+        </form>
+        {% include 'onboro/messages.html' %}
+    {% else %}
+        <div class="card text-dark bg-light mt-3">
+            <div class="card-body">
+                購入済み
+            </div>
+        </div>
+    {% endif %}
+{% endif %}
+
+{% endblock %}

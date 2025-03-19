@@ -1,0 +1,48 @@
+{% extends 'onboro/base.html' %}
+{% load humanize %}  
+
+{% block contents %}  
+
+{% if user.is_authenticated %}  
+
+<h1 class="mt-3">本棚</h1>  
+
+<!-- ここにマイページ設定へのリンクを追加 -->  
+<div class="mb-3">  
+    <a href="{% url 'onboro:my_page_settings' %}">設定</a>
+</div>  
+
+<table class="table">  
+    <thead>  
+        <tr>  
+            <th>カテゴリ</th>  
+            <th>書名</th>  
+            <th>金額</th>  
+        </tr>  
+    </thead>  
+    <tbody>  
+    {% for book in user.books.all %}  
+        <tr>  
+            <td>{{ book.category.name }}</td>  
+            <td>  
+                <a href="{% url 'onboro:book_detail' book.pk %}">  
+                    <img src="{{ book.image.url }}" alt="{{ book.title }}" style="width: 30px; height: auto;">  
+                    {{ book.title }}  
+                </a>  
+            </td>  
+            <td>{{ book.price|intcomma }}</td>  
+        </tr>  
+    {% endfor %}  
+    </tbody>  
+</table>  
+
+<div class="mb-3">  
+    保有コイン:{{ user.coin|intcomma }}
+</div>  
+
+<h1>取引記録</h1>  
+{% include 'onboro/transaction_records.html' with transaction_records=user.transactionrecord_set.all %}  
+
+{% endif %}  
+
+{% endblock %}  

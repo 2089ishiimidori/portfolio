@@ -1,0 +1,25 @@
+{% load humanize %}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>種別</th>
+            <th>金額</th>
+            <th>日時</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for record in transaction_records %}
+            <tr>
+                <td>
+                    {{ record.get_kind_display }}
+                    {% if record.book %}
+                        (<a href="{% url 'onboro:book_detail' record.book.pk %}">{{ record.book }}</a>
+                    {% endif %}
+                </td>
+                <td>{{ record.amount|intcomma }}</td>
+                <td>{{ record.datetime }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

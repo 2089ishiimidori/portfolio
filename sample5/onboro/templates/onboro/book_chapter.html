@@ -1,0 +1,44 @@
+{% extends 'onboro/base.html' %}
+
+{% block title %}
+{{ chapter.taitle_with_number }} | {{ book.title }} | {{ block.super }}
+{% endblock %}
+
+{% block contents %}
+
+<h1 class="my-3">
+    <a href="{% url 'onboro:book_detail' book.pk %}">
+        {{ book.title }}
+    </a>
+</h1>
+<h2 class="my-3">{{ chapter.title_with_number }}</h2>
+
+{{ chapter.body|linebreaks }}
+
+<ul class="nav">
+    {# 前の章があったら表示 #}
+    {% with prev_chapter=chapter.prev_chapter %}
+        {% if prev_chapter %}
+            <! -- me-autoは「この要素の後に幅一杯の空きを入れる指定」 -->
+            <li class="nav-item me-auto">
+                <a href="{% url 'onboro:book_chapter' book.id prev_chapter.number %}" class="nav-link">
+                    &laquo;{{ prev_chapter.title_with_number }}
+                </a>
+            </li>
+        {% endif %}
+    {% endwith %}
+
+    {# 次の章があったら表示 #}
+    {% with next_chapter=chapter.next_chapter %}
+        {% if next_chapter %}
+            <!-- ms-autoは「この要素の前に幅一杯の空きを入れる指定」 -->
+            <li class="nav-iitem ms-auto">
+                <a href="{% url 'onboro:book_chapter' book.id next_chapter.number %}" class="nav-link">
+                    {{ next_chapter.title_with_number }} &raquo;
+                </a>
+            </li>
+        {% endif %}
+    {% endwith %}
+</ul>
+
+{% endblock %}

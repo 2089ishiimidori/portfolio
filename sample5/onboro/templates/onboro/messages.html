@@ -1,0 +1,8 @@
+{% if messages %}
+  {# 繰り返しはするが実際には一つ #}
+  {% for message in messages %}
+    <div class="card mt-3 {{ message.tags }}">
+      <div class="card-body">{{ message }}</div>
+    </div>
+  {% endfor %}
+{% endif %}

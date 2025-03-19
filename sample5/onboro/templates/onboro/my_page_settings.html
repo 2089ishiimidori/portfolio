@@ -1,0 +1,42 @@
+{% extends 'onboro/base.html' %}
+{% load widget_tweaks %}
+
+{% block contents %}
+
+<h1>マイページ</h1>
+
+<!-- カスタム設定フォーム -->
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}  <!-- カスタム設定フォームの表示 -->
+
+    <button type="submit" name="update_settings">更新</button>  <!-- 更新ボタン -->
+</form>
+
+<!-- カスタム設定内容の表示 -->
+<p style="background-color: {{ user.userprofile.background_color }}; color: {% if user.userprofile.background_color == 'black' %} white {% else %} black {% endif %};">
+    カスタム設定内容: {{ user.userprofile.custom_setting }}
+</p>
+
+<!-- カスタム設定を変更するためのボタン -->
+<form method="post" action="{% url 'onboro:my_page_settings' %}">
+    {% csrf_token %}
+    <button type="submit">カスタム設定を変更</button>
+</form>
+
+<!-- アイコン画像のアップロードフォーム -->
+<form method="post" enctype="multipart/form-data" action="{% url 'onboro:my_page_settings' %}">
+    {% csrf_token %}
+    <label for="icon_upload">アイコンをアップロード:</label>
+    <input type="file" name="icon" id="icon_upload" accept="image/*">
+    <button type="submit" name="upload_icon">アップロード</button>  <!-- アップロードボタン -->
+</form>
+
+<!-- アイコン画像の表示 -->
+{% if user.userprofile.icon %}
+    <img src="{{ user.userprofile.icon.url }}" alt="{{ user.username }}のアイコン" style="max-width: 100px;">
+{% else %}
+    <p>アイコンが設定されていません。</p>
+{% endif %}
+
+{% endblock %}  

@@ -1,0 +1,31 @@
+{% extends 'onboro/base.html' %}
+{% load widget_tweaks %}
+
+{% block contents %}
+
+<form method="post" class="mt-3">
+    {% csrf_token %}
+
+    <div class="mb-3">
+        {{ form.username|add_label_class:"form-label" }}
+        {{ form.username|add_class:"form-control" }}
+    </div>
+    <div class="mb-3">
+        {{ form.password|add_label_class:"form-label" }}
+        {{ form.password|add_class:"form-control" }}
+    </div>
+    <input type="submit" class="btn btn-primary" value="ログイン">
+
+    {# フィールド以外のエラー(ログイン失敗など)を表示 #}
+    {% if form.non_field_errors %}
+        <div class="card bg-waring mt-3">
+            <div class="card-body">
+                {% for error in form.non_field_erros %}
+                    <div class="card-text">{{ error }}</div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+</form>
+
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends 'onboro/base.html' %}
+{% load widget_tweaks %}
+
+{% block contents %}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ユーザー名</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in users %}
+            <tr>
+                <td>
+                    <a href="{% url 'onboro:user_detail' user.id %}">
+                        {{ user.username }}
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<form action="{% url 'onboro:user_import' %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="mb-3">
+        {{ import_form.file|add_class:"form-control" }}
+    </div>
+    <input type="submit" value="インポート" class="btn btn-primary">
+</form>
+
+{% include 'onboro/messages.html' %}
+
+{% endblock %}

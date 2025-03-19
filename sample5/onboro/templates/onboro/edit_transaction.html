@@ -1,0 +1,20 @@
+{% extends 'onboro/base.html' %}　　
+
+{% block contents %}
+
+<head>
+    <meta charset="UTF-8">
+    <title>取引記録の編集</title>
+</head>
+<body>
+    <h1>取引記録の編集</h1>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">更新</button>
+    </form>
+    <a href="{% url 'transaction_list' %}">戻る</a>
+</body>
+</html>
+
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends 'onboro/base.html' %}
+{% load humanize %}
+
+{% block contents %}
+
+<table class="table mt-3">
+    <thead>
+        <tr>
+            <th>カテゴリ</th>
+            <th>書名</th>
+            <th>価格</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for book in books %}
+            <tr>
+                <td>{{ book.category.name }}</td>
+                <td>
+                    <a href="{% url 'onboro:book_detail' book.pk %}">
+                        <img src="{{ book.image.url }}" alt="{{ book.title }}" style="width: 30px; height: auto;">
+                        {{ book.title }}
+                    </a>
+                </td>
+                <td>{{ book.price|intcomma }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}
